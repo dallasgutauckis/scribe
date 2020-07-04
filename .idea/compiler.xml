@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel target="1.7">
+      <module name="Scribe.app" target="1.8" />
+      <module name="Scribe.buildSrc" target="1.8" />
+      <module name="Scribe.lib.platform" target="1.8" />
+      <module name="Scribe.mylibrary" target="1.8" />
+      <module name="Scribe.scanner.platform" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

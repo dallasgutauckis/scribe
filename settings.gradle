@@ -1,0 +1,7 @@
+rootProject.name = "Scribe"
+include ':app',
+        ':scanner:presentation',
+        ':scanner:platform',
+        ':scanner:domain',
+        ':lib:presentation',
+        ':lib:platform'
