@@ -13,7 +13,7 @@ interface Presentation<Model, Msg, Props> {
 typealias ScanImageEffectFactory = (ScannerPresentation.Msg.Scan) -> Effect<ScannerPresentation.Msg>
 
 class ScannerPresentation(private val scanImageFactory: ScanImageEffectFactory)
-    : Presentation<ScannerPresentation.Model, ScannerPresentation.Msg, ScannerPresentation.Props> {
+    :  Presentation<ScannerPresentation.Model, ScannerPresentation.Msg, ScannerPresentation.Props> {
     data class Model(
         val isCameraOn: Boolean = false,
         val isScanning: Boolean = false
@@ -23,7 +23,8 @@ class ScannerPresentation(private val scanImageFactory: ScanImageEffectFactory)
         val isCameraOn: Boolean = false,
         val isScanning: Boolean = false,
         val startCamera: ((Dispatch<Msg>) -> Unit)? = null,
-        val stopCamera: ((Dispatch<Msg>) -> Unit)? = null
+        val stopCamera: ((Dispatch<Msg>) -> Unit)? = null,
+        val isCameraPermissionGranted: Boolean
     )
 
     sealed class Msg {
@@ -51,7 +52,8 @@ class ScannerPresentation(private val scanImageFactory: ScanImageEffectFactory)
             isCameraOn = it.isCameraOn,
             isScanning = it.isScanning,
             startCamera = { dispatch -> dispatch(Msg.StartCamera) },
-            stopCamera = { dispatch -> dispatch(Msg.StopCamera) }
+            stopCamera = { dispatch -> dispatch(Msg.StopCamera) },
+            isCameraPermissionGranted =
         )
     }
 }

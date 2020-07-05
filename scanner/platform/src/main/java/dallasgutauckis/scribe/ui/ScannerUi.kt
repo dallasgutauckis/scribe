@@ -1,5 +1,6 @@
 package dallasgutauckis.scribe.ui
 
+import androidx.camera.view.PreviewView
 import androidx.compose.Composable
 import androidx.compose.MutableState
 import androidx.compose.mutableStateOf
@@ -10,13 +11,16 @@ import androidx.ui.layout.padding
 import androidx.ui.material.FloatingActionButton
 import androidx.ui.material.Scaffold
 import androidx.ui.unit.dp
+import androidx.ui.viewinterop.AndroidView
 import dallasgutauckis.scribe.presentation.ScannerPresentation
+import dallasgutauckis.scribe.scanner.platform.R
 import oolong.Dispatch
 import oolong.Effect
 import oolong.Oolong
 import oolong.Render
 
-class ScannerUi {
+class ScannerUi() {
+
     /**
      * Compose model representing the current state of the UI
      */
@@ -65,11 +69,16 @@ class ScannerUi {
 
                     if (isCameraOn) {
                         Text("Camera's on!")
+
+                        if (lastRender.props.isCameraPermissionGranted) {
+                            AndroidView(R.layout.camera_preview) { view ->
+                                (view as PreviewView)
+                            }
+                        }
                     }
 
-                    if (lastRender.props.isScanning) {
-                        Text("Scanning!")
-                    }
+
+                    if (lastRender.props.isScanning) Text("Scanning!")
                 }
             }
         }
@@ -80,7 +89,7 @@ sealed class LastRender<Props, Msg> {
     data class Value<Props, Msg>(val props: Props, val dispatch: Dispatch<Msg>) :
         LastRender<Props, Msg>()
 
-    data class NoValue<Props, Msg>(val sentinelValue: Unit = Unit) : LastRender<Props, Msg>()
+    data class NoValue<Props, Msg>(val noop: Unit = Unit) : LastRender<Props, Msg>()
 }
 
 fun <Msg, Props> composeRenderer(uiModel: MutableState<LastRender<Props, Msg>>): Render<Msg, Props> =

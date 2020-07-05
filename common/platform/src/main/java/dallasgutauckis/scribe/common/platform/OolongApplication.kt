@@ -1,4 +1,4 @@
-package dallasgutauckis.scribe.lib_platform
+package dallasgutauckis.scribe.common.platform
 
 import android.content.Context
 import oolong.Render
