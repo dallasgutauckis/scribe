@@ -30,7 +30,6 @@ class ScannerUi() {
     private val presentation = ScannerPresentation(scanImageFactory = { scan ->
         { dispatch ->
             // TODO Run ML
-            val options = ObjectDetec
 
             dispatch(ScannerPresentation.Msg.ImageScanComplete(emptyList()))
         }
