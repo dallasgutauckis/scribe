@@ -10,6 +10,7 @@ java {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'com.google.mlkit:object-detection:16.1.0'
 
     api project(':lib:presentation')
 }

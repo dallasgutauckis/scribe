@@ -10,7 +10,10 @@ interface Presentation<Model, Msg, Props> {
     val view: View<Model, Props>
 }
 
-object ScannerPresentation : Presentation<ScannerPresentation.Model, ScannerPresentation.Msg, ScannerPresentation.Props> {
+typealias ScanImageEffectFactory = (ScannerPresentation.Msg.Scan) -> Effect<ScannerPresentation.Msg>
+
+class ScannerPresentation(private val scanImageFactory: ScanImageEffectFactory)
+    : Presentation<ScannerPresentation.Model, ScannerPresentation.Msg, ScannerPresentation.Props> {
     data class Model(
         val isCameraOn: Boolean = false,
         val isScanning: Boolean = false
@@ -26,12 +29,8 @@ object ScannerPresentation : Presentation<ScannerPresentation.Model, ScannerPres
     sealed class Msg {
         object StartCamera : Msg()
         object StopCamera : Msg()
-        object Scan : Msg()
+        data class Scan(val image: String) : Msg()
         data class ImageScanComplete(val cards: List<Card>) : Msg()
-    }
-
-    private val scanPhoto: Effect<Msg> = { dispatch ->
-        dispatch(Msg.ImageScanComplete(emptyList()))
     }
 
     override val init: Init<Model, Msg> = {
@@ -42,7 +41,7 @@ object ScannerPresentation : Presentation<ScannerPresentation.Model, ScannerPres
         when (msg) {
             Msg.StartCamera -> next(model.copy(isCameraOn = true), none())
             Msg.StopCamera -> next(model.copy(isCameraOn = false), none())
-            Msg.Scan -> next(model.copy(isScanning = true), scanPhoto)
+            is Msg.Scan -> next(model.copy(isScanning = true), scanImageFactory(msg))
             is Msg.ImageScanComplete -> next(model.copy(isScanning = false), none())
         }
     }

@@ -12,6 +12,7 @@ import androidx.ui.material.Scaffold
 import androidx.ui.unit.dp
 import dallasgutauckis.scribe.presentation.ScannerPresentation
 import oolong.Dispatch
+import oolong.Effect
 import oolong.Oolong
 import oolong.Render
 
@@ -22,17 +23,27 @@ class ScannerUi {
     private val uiModel =
         mutableStateOf<LastRender<ScannerPresentation.Props, ScannerPresentation.Msg>>(LastRender.NoValue())
 
+    private val presentation = ScannerPresentation(scanImageFactory = { scan ->
+        { dispatch ->
+            // TODO Run ML
+            val options = ObjectDetec
+
+            dispatch(ScannerPresentation.Msg.ImageScanComplete(emptyList()))
+        }
+    })
+
     private val oolong =
         Oolong.runtime(
-            init = ScannerPresentation.init,
-            update = ScannerPresentation.update,
-            view = ScannerPresentation.view,
+            init = presentation.init,
+            update = presentation.update,
+            view = presentation.view,
             render = composeRenderer(uiModel)
         )
 
     @Composable
     fun bindUi() {
         val lastRender = uiModel.value
+
         if (lastRender is LastRender.NoValue) {
             return
         } else if (lastRender is LastRender.Value<ScannerPresentation.Props, ScannerPresentation.Msg>) {
