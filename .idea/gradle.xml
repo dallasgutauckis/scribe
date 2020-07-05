@@ -13,9 +13,9 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/buildSrc" />
-            <option value="$PROJECT_DIR$/lib" />
-            <option value="$PROJECT_DIR$/lib/platform" />
-            <option value="$PROJECT_DIR$/lib/presentation" />
+            <option value="$PROJECT_DIR$/common" />
+            <option value="$PROJECT_DIR$/common/platform" />
+            <option value="$PROJECT_DIR$/common/presentation" />
             <option value="$PROJECT_DIR$/scanner" />
             <option value="$PROJECT_DIR$/scanner/domain" />
             <option value="$PROJECT_DIR$/scanner/platform" />

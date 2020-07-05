@@ -4,6 +4,7 @@
     <bytecodeTargetLevel target="1.7">
       <module name="Scribe.app" target="1.8" />
       <module name="Scribe.buildSrc" target="1.8" />
+      <module name="Scribe.common.platform" target="1.8" />
       <module name="Scribe.lib.platform" target="1.8" />
       <module name="Scribe.mylibrary" target="1.8" />
       <module name="Scribe.scanner.platform" target="1.8" />

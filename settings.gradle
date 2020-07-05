@@ -3,5 +3,5 @@ include ':app',
         ':scanner:presentation',
         ':scanner:platform',
         ':scanner:domain',
-        ':lib:presentation',
-        ':lib:platform'
+        ':common:presentation',
+        ':common:platform'

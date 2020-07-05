@@ -10,7 +10,7 @@ interface Presentation<Model, Msg, Props> {
     val view: View<Model, Props>
 }
 
-object ScannerPresentation : Presentation<ScannerPresentation.Model, ScannerPresentation.Msg, ScannerPresentation.Props> {
+object ScannerPresentation :  Presentation<ScannerPresentation.Model, ScannerPresentation.Msg, ScannerPresentation.Props> {
     data class Model(
         val isCameraOn: Boolean = false,
         val isScanning: Boolean = false
@@ -20,7 +20,8 @@ object ScannerPresentation : Presentation<ScannerPresentation.Model, ScannerPres
         val isCameraOn: Boolean = false,
         val isScanning: Boolean = false,
         val startCamera: ((Dispatch<Msg>) -> Unit)? = null,
-        val stopCamera: ((Dispatch<Msg>) -> Unit)? = null
+        val stopCamera: ((Dispatch<Msg>) -> Unit)? = null,
+        val isCameraPermissionGranted: Boolean
     )
 
     sealed class Msg {
@@ -52,7 +53,8 @@ object ScannerPresentation : Presentation<ScannerPresentation.Model, ScannerPres
             isCameraOn = it.isCameraOn,
             isScanning = it.isScanning,
             startCamera = { dispatch -> dispatch(Msg.StartCamera) },
-            stopCamera = { dispatch -> dispatch(Msg.StopCamera) }
+            stopCamera = { dispatch -> dispatch(Msg.StopCamera) },
+            isCameraPermissionGranted =
         )
     }
 }
