@@ -20,6 +20,9 @@
             <option value="$PROJECT_DIR$/scanner/domain" />
             <option value="$PROJECT_DIR$/scanner/platform" />
             <option value="$PROJECT_DIR$/scanner/presentation" />
+            <option value="$PROJECT_DIR$/scanners" />
+            <option value="$PROJECT_DIR$/scanners/interface" />
+            <option value="$PROJECT_DIR$/scanners/uno-card-scanner" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

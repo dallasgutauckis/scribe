@@ -1,13 +1,26 @@
 package dallasgutauckis.scribe
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
 import androidx.ui.core.setContent
+import dallasgutauckis.scribe.common.platform.permissioning.PermissionRequestDelegateManager
+import dallasgutauckis.scribe.common.platform.permissioning.PermissionRequestHandler
+import dallasgutauckis.scribe.common.platform.permissioning.PermissionRequestManager
+import dallasgutauckis.scribe.common.platform.permissioning.androidName
+import dallasgutauckis.scribe.common.presentation.permissioning.Permission
+import dallasgutauckis.scribe.common.presentation.permissioning.PermissionCallback
 import dallasgutauckis.scribe.ui.ScannerUi
+import java.io.File
 import java.net.URI
 
-class MainActivity : AppCompatActivity() {
+
+class MainActivity : ComponentActivity(), PermissionRequestHandler {
+
+    private val permissionRequestDelegateManager = PermissionRequestDelegateManager()
+
+    private val permissionRequestManager = PermissionRequestManager(this)
 
     private val navigation: Navigation = { directive ->
         when (directive) {
@@ -26,11 +39,48 @@ class MainActivity : AppCompatActivity() {
 
         setContent {
             when (navigation.destination(intent)) {
-                Destination.Scanner -> ScannerUi().bindUi()
+                Destination.Scanner -> ScannerUi(permissionRequestManager.camera, this).ui()
                 null -> TODO()
             }
         }
     }
+
+    /**
+     * Called by Android platform and delivers camera permissions to the relevant requester in the [permissionRequests]
+     */
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        if (!permissionRequestDelegateManager.handlePermissionResult(
+                requestCode,
+                permissions,
+                grantResults.toTypedArray()
+            )
+        ) {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        }
+    }
+
+    override fun requestPermissions(
+        permissions: Array<Permission>,
+        callback: PermissionCallback
+    ) {
+        requestPermissions(
+            permissions.map { it.androidName }.toTypedArray(),
+            permissionRequestDelegateManager.addPermissionCallback(callback)
+        )
+    }
+
+    override fun hasPermission(permission: String): Boolean {
+        return when (val result = checkSelfPermission(permission)) {
+            PackageManager.PERMISSION_GRANTED -> true
+            PackageManager.PERMISSION_DENIED -> false
+            else -> throw IllegalArgumentException("Unexpected value returned when checking permission ($permission): $result")
+        }
+    }
+
 }
 
 sealed class Destination {

@@ -8,6 +8,9 @@
       <module name="Scribe.lib.platform" target="1.8" />
       <module name="Scribe.mylibrary" target="1.8" />
       <module name="Scribe.scanner.platform" target="1.8" />
+      <module name="Scribe.scanners.interface" target="1.8" />
+      <module name="Scribe.scanners.uno-card-scanner" target="1.8" />
+      <module name="Scribe.uno-card-scanner" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

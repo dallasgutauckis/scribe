@@ -4,4 +4,6 @@ include ':app',
         ':scanner:platform',
         ':scanner:domain',
         ':common:presentation',
-        ':common:platform'
+        ':common:platform',
+        ':scanners:interface',
+        ':scanners:uno-card-scanner'

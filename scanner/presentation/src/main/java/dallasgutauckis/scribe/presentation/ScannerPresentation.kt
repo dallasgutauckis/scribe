@@ -12,30 +12,36 @@ interface Presentation<Model, Msg, Props> {
 
 typealias ScanImageEffectFactory = (ScannerPresentation.Msg.Scan) -> Effect<ScannerPresentation.Msg>
 
-class ScannerPresentation(private val scanImageFactory: ScanImageEffectFactory)
+class ScannerPresentation(
+    private val isCameraAllowed: Boolean,
+    private val scanImageFactory: ScanImageEffectFactory)
     :  Presentation<ScannerPresentation.Model, ScannerPresentation.Msg, ScannerPresentation.Props> {
     data class Model(
         val isCameraOn: Boolean = false,
+        val isCameraAllowed: Boolean = false,
         val isScanning: Boolean = false
     )
 
     data class Props(
         val isCameraOn: Boolean = false,
         val isScanning: Boolean = false,
+        val isCameraPermissionGranted: Boolean = false,
         val startCamera: ((Dispatch<Msg>) -> Unit)? = null,
-        val stopCamera: ((Dispatch<Msg>) -> Unit)? = null,
-        val isCameraPermissionGranted: Boolean
+        val stopCamera: ((Dispatch<Msg>) -> Unit)? = null
     )
 
     sealed class Msg {
         object StartCamera : Msg()
         object StopCamera : Msg()
+        object CameraPermissionAllowed : Msg()
+        object CameraPermissionDenied : Msg()
+
         data class Scan(val image: String) : Msg()
         data class ImageScanComplete(val cards: List<Card>) : Msg()
     }
 
     override val init: Init<Model, Msg> = {
-        next(Model(), none())
+        next(Model(isCameraAllowed = isCameraAllowed), none())
     }
 
     override val update: Update<Model, Msg> = { msg, model ->
@@ -44,6 +50,8 @@ class ScannerPresentation(private val scanImageFactory: ScanImageEffectFactory)
             Msg.StopCamera -> next(model.copy(isCameraOn = false), none())
             is Msg.Scan -> next(model.copy(isScanning = true), scanImageFactory(msg))
             is Msg.ImageScanComplete -> next(model.copy(isScanning = false), none())
+            Msg.CameraPermissionAllowed -> next(model.copy(isCameraAllowed = true), none())
+            Msg.CameraPermissionDenied -> next(model.copy(isCameraAllowed = false), none())
         }
     }
 
@@ -52,8 +60,7 @@ class ScannerPresentation(private val scanImageFactory: ScanImageEffectFactory)
             isCameraOn = it.isCameraOn,
             isScanning = it.isScanning,
             startCamera = { dispatch -> dispatch(Msg.StartCamera) },
-            stopCamera = { dispatch -> dispatch(Msg.StopCamera) },
-            isCameraPermissionGranted =
+            stopCamera = { dispatch -> dispatch(Msg.StopCamera) }
         )
     }
 }
@@ -62,9 +69,3 @@ class ScannerPresentation(private val scanImageFactory: ScanImageEffectFactory)
  * This function was created to make the implementations for this less dependent on Pair specifically and make the functionality easily replaceable
  */
 fun <Model, Msg> next(model: Model, msg: Effect<Msg>): Next<Model, Msg> = model to msg
-
-/**
- * Useful for situations where the View model and the props would be the same (basic screens and
- * screens without usable components, e.g. informational screens)
- */
-fun <T> identity(): View<T, T> = { it }
